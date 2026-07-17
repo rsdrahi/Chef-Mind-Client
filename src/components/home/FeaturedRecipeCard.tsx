@@ -1,0 +1,63 @@
+import { Skeleton } from "../common/Skeleton";
+
+export interface FeaturedRecipeCardProps {
+  isLoading?: boolean;
+  recipe?: {
+    id: string;
+    title: string;
+    image: string;
+    time: string;
+    difficulty: string;
+    rating: number;
+    author: string;
+  };
+}
+
+export function FeaturedRecipeCard({ isLoading = true, recipe }: FeaturedRecipeCardProps) {
+  if (isLoading || !recipe) {
+    return (
+      <div className="flex flex-col gap-3 p-4 rounded-2xl bg-surface border border-border shadow-sm">
+        <Skeleton className="w-full h-48 rounded-xl" />
+        <div className="flex justify-between items-center mt-2">
+          <Skeleton className="w-20 h-5" />
+          <Skeleton className="w-16 h-5" />
+        </div>
+        <Skeleton className="w-full h-6 mt-1" />
+        <Skeleton className="w-2/3 h-6" />
+        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
+          <Skeleton className="w-8 h-8 rounded-full" />
+          <Skeleton className="w-24 h-4" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="group flex flex-col gap-3 p-4 rounded-2xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+      <div className="relative w-full h-48 rounded-xl overflow-hidden bg-surface-hover">
+        {/* Placeholder for actual image */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
+        <img src={recipe.image} alt={recipe.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+        <div className="absolute top-3 right-3 z-20 bg-white/90 dark:bg-black/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-foreground">
+          ⭐ {recipe.rating}
+        </div>
+      </div>
+      
+      <div className="flex justify-between items-center mt-2 text-xs font-medium text-foreground/60">
+        <span className="flex items-center gap-1">⏱️ {recipe.time}</span>
+        <span className="flex items-center gap-1">🍳 {recipe.difficulty}</span>
+      </div>
+      
+      <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
+        {recipe.title}
+      </h3>
+      
+      <div className="flex items-center gap-2 mt-auto pt-4 border-t border-border">
+        <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">
+          {recipe.author.charAt(0)}
+        </div>
+        <span className="text-sm font-medium text-foreground/80">{recipe.author}</span>
+      </div>
+    </div>
+  );
+}
