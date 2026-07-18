@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Bookmark } from "lucide-react";
 import { Button } from "../common/Button";
@@ -19,7 +18,7 @@ export function Hero() {
               <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
               <span className="text-sm font-medium text-foreground/80">Smart cooking made easy</span>
             </div>
-            
+
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-tight">
               Master your <br className="hidden lg:block" />
               kitchen with <br className="hidden lg:block" />
@@ -27,26 +26,26 @@ export function Hero() {
                 ChefMind
               </span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
               Discover millions of premium recipes, organize your weekly meals, and cook like a professional with our intelligent culinary assistant.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mt-4">
               <Link href="/recipes" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto group">
+                <Button size="lg" className="w-full group">
                   Explore Recipes
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link href="/saved-recipes" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto group bg-surface">
+                <Button variant="outline" size="lg" className="w-full group bg-surface">
                   <Bookmark className="mr-2 w-5 h-5 group-hover:fill-current transition-colors" />
                   Saved Recipes
                 </Button>
               </Link>
             </div>
-            
+
             {/* Social Proof */}
             <div className="flex items-center gap-4 justify-center lg:justify-start mt-8 pt-8 border-t border-border/50">
               <div className="flex -space-x-3">
@@ -67,15 +66,13 @@ export function Hero() {
           <div className="relative z-10 w-full h-[400px] md:h-[500px] lg:h-[600px] animate-fade-in-up">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-3xl blur-2xl -z-10 transform scale-95"></div>
             <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-white/20">
-              <Image
+              <img
                 src="/images/hero.png"
                 alt="Chef preparing healthy food"
-                fill
-                className="object-cover"
-                priority
+                className="object-cover w-full h-full"
               />
             </div>
-            
+
             {/* Floating Elements */}
             <div className="absolute -top-6 -right-6 bg-white dark:bg-surface p-4 rounded-2xl shadow-xl border border-border glass animate-bounce-slow hidden md:flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-xl">🥑</div>
@@ -84,7 +81,7 @@ export function Hero() {
                 <p className="text-sm font-bold">Avocado Toast</p>
               </div>
             </div>
-            
+
             <div className="absolute -bottom-6 -left-6 bg-white dark:bg-surface p-4 rounded-2xl shadow-xl border border-border glass animate-pulse-slow hidden md:flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-xl">🔥</div>
               <div>

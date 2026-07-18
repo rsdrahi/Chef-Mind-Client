@@ -1,6 +1,8 @@
+
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/providers/ToastProvider";
 import { ThemeProvider } from "@/providers/theme-provider";
 
 const outfit = Outfit({
@@ -25,13 +27,9 @@ export default function RootLayout({
       className={`${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider defaultTheme="system">
           {children}
+          <ToastProvider />
         </ThemeProvider>
       </body>
     </html>

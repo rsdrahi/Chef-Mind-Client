@@ -1,9 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
-// import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 import { Container } from "./Container";
-import { FaFacebookF } from "react-icons/fa";
-import { BsInstagram, BsTwitterX, BsYoutube } from "react-icons/bs";
+import { FaFacebookF, FaInstagram, FaTwitterSquare, FaYoutube } from "react-icons/fa";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -16,7 +13,7 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2">
               <div className="relative w-8 h-8 overflow-hidden rounded-lg bg-background shadow-sm flex items-center justify-center p-1">
-                <Image
+                <img
                   src="/images/logo.png"
                   alt="ChefMind Logo"
                   width={32}
@@ -36,13 +33,13 @@ export function Footer() {
                 <FaFacebookF size={20} />
               </a>
               <a href="#" className="text-foreground/50 hover:text-primary transition-colors">
-                <BsTwitterX size={20} />
+                <FaTwitterSquare size={20} />
               </a>
               <a href="#" className="text-foreground/50 hover:text-primary transition-colors">
-                <BsInstagram size={20} />
+                <FaInstagram size={20} />
               </a>
               <a href="#" className="text-foreground/50 hover:text-primary transition-colors">
-                <BsYoutube size={20} />
+                <FaYoutube size={20} />
               </a>
             </div>
           </div>

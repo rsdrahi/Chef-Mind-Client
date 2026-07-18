@@ -2,31 +2,46 @@
 
 import * as React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { Container } from "./Container";
-// Assuming auth client is used, we'll mock the hook for now to only show UI as requested
-import { useSession } from "@/lib/auth-client";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import toast from "react-hot-toast";
 
-const navLinks = [
+const publicNavLinks = [
   { name: "Home", href: "/" },
   { name: "Recipes", href: "/recipes" },
+];
+
+const privateNavLinks = [
   { name: "Dashboard", href: "/dashboard" },
-  { name: "Saved", href: "/saved-recipes" },
+  { name: "Saved Recipes", href: "/saved-recipes" },
 ];
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const pathname = usePathname();
-  
-  // Using the real auth hook if it exists, otherwise it might be null
-  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      console.log("Firebase User:", currentUser);
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const isHomePage = pathname === "/";
 
   React.useEffect(() => {
@@ -43,10 +58,26 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   React.useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+
+      toast.success("Logged out successfully.");
+
+      router.push("/");
+    } catch (error) {
+      toast.error("Failed to logout");
+      console.error(error);
+    }
+  };
+
+  const navLinks = user
+    ? [...publicNavLinks, ...privateNavLinks]
+    : publicNavLinks;
 
   return (
     <header
@@ -61,7 +92,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:shadow-md transition-shadow">
-            <Image
+            <img
               src="/images/logo.png"
               alt="ChefMind Logo"
               width={40}
@@ -100,35 +131,37 @@ export function Navbar() {
         {/* Right Actions */}
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
-          
-          {isPending ? (
+
+          {loading ? (
             <div className="flex gap-2">
               <div className="w-20 h-10 animate-pulse bg-surface-hover rounded-full"></div>
               <div className="w-20 h-10 animate-pulse bg-surface-hover rounded-full"></div>
             </div>
-          ) : session ? (
-            <div className="flex items-center gap-3">
-              <Link href="/dashboard">
-                <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold shadow-md cursor-pointer hover:shadow-lg transition-shadow">
-                  {session.user?.name?.charAt(0) || "U"}
+          ) : user ? (
+            <div className="flex items-center gap-4 pl-2">
+              <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold shadow-md">
+                  {user.displayName?.charAt(0).toUpperCase() || "U"}
                 </div>
+                <span className={cn(
+                  "font-medium text-sm",
+                  !isScrolled && isHomePage ? "text-white drop-shadow-md" : "text-foreground"
+                )}>
+                  {user.displayName}
+                </span>
               </Link>
-              <Button variant="outline" size="sm" onClick={() => {/* Logout logic handled by auth-client */}}>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 Logout
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login">
-                <Button variant="ghost" size="sm">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button variant="primary" size="sm">
-                  Get Started
-                </Button>
-              </Link>
+              <Button variant="ghost" size="sm" className={cn(!isScrolled && isHomePage ? "text-white hover:text-white/80 hover:bg-white/10" : "")} onClick={() => router.push('/login')}>
+                Login
+              </Button>
+              <Button variant="primary" size="sm" onClick={() => router.push('/register')}>
+                Get Started
+              </Button>
             </div>
           )}
         </div>
@@ -169,34 +202,30 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              
+
               <div className="h-px bg-border my-2 w-full" />
-              
-              {!isPending && !session ? (
+
+              {!loading && !user ? (
                 <div className="flex flex-col gap-2">
-                  <Link href="/login" className="w-full">
-                    <Button variant="outline" className="w-full">
-                      Login
-                    </Button>
-                  </Link>
-                  <Link href="/register" className="w-full">
-                    <Button variant="primary" className="w-full">
-                      Get Started
-                    </Button>
-                  </Link>
+                  <Button variant="outline" className="w-full" onClick={() => { setIsMobileMenuOpen(false); router.push('/login'); }}>
+                    Login
+                  </Button>
+                  <Button variant="primary" className="w-full" onClick={() => { setIsMobileMenuOpen(false); router.push('/register'); }}>
+                    Get Started
+                  </Button>
                 </div>
-              ) : session ? (
+              ) : user ? (
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-3 px-2 py-2">
+                  <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2 hover:bg-surface-hover rounded-xl transition-colors">
                     <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-                      {session.user?.name?.charAt(0) || "U"}
+                      {user.displayName?.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-medium">{session.user?.name}</p>
-                      <p className="text-xs text-foreground/60">{session.user?.email}</p>
+                      <p className="font-medium">{user.displayName}</p>
+                      <p className="text-xs text-foreground/60">{user.email}</p>
                     </div>
-                  </div>
-                  <Button variant="outline" className="w-full">
+                  </Link>
+                  <Button variant="outline" className="w-full mt-2" onClick={handleLogout}>
                     Logout
                   </Button>
                 </div>
