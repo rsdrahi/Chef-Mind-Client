@@ -1,6 +1,28 @@
+'use client'
 import { Container } from "../common/Container";
 import { SectionTitle } from "../common/SectionTitle";
 import { Zap, Heart, BookOpen, Clock } from "lucide-react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 200, damping: 20 }
+  },
+};
 
 const features = [
   {
@@ -33,26 +55,32 @@ export function WhyChooseUs() {
   return (
     <section className="py-20 bg-surface">
       <Container>
-        <SectionTitle 
-          title="Why Choose ChefMind" 
+        <SectionTitle
+          title="Why Choose ChefMind"
           subtitle="We make cooking easier, healthier, and more fun with our smart tools and premium content."
           alignment="center"
           className="mb-16"
         />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
           {features.map((feature) => (
-            <div key={feature.title} className="flex flex-col items-center text-center p-6 bg-background rounded-3xl border border-border shadow-sm hover:shadow-md transition-shadow">
-              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${feature.color}`}>
+            <motion.div key={feature.title} variants={cardVariants} className="flex flex-col items-center text-center p-6 bg-background rounded-3xl border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 group">
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${feature.color} group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                 <feature.icon size={32} />
               </div>
               <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
               <p className="text-foreground/70 leading-relaxed">
                 {feature.description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Container>
     </section>
   );

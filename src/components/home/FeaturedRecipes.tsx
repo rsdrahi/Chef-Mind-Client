@@ -7,8 +7,28 @@ import { FeaturedRecipeCard } from "./FeaturedRecipeCard";
 import { Button } from "../common/Button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { recipeService } from "@/services/recipe.service";
 import { Recipe } from "@/types";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 }
+  },
+};
 
 export function FeaturedRecipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -64,16 +84,26 @@ export function FeaturedRecipes() {
             <p className="text-foreground/70">No featured recipes found at the moment.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+          >
             {isLoading 
               ? loadingCards.map((index) => (
-                  <FeaturedRecipeCard key={index} isLoading={true} />
+                  <motion.div key={index} variants={itemVariants} className="h-full">
+                    <FeaturedRecipeCard isLoading={true} />
+                  </motion.div>
                 ))
               : recipes.map((recipe) => (
-                  <FeaturedRecipeCard key={recipe._id} isLoading={false} recipe={recipe} />
+                  <motion.div key={recipe._id} variants={itemVariants} className="h-full">
+                    <FeaturedRecipeCard isLoading={false} recipe={recipe} />
+                  </motion.div>
                 ))
             }
-          </div>
+          </motion.div>
         )}
       </Container>
     </section>

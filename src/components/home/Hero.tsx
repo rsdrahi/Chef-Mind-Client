@@ -1,7 +1,29 @@
+'use client'
 import Link from "next/link";
 import { ArrowRight, Bookmark } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "../common/Button";
 import { Container } from "../common/Container";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 }
+  },
+};
 
 export function Hero() {
   return (
@@ -13,25 +35,30 @@ export function Hero() {
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
-          <div className="flex flex-col gap-6 text-center lg:text-left z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border w-fit mx-auto lg:mx-0 shadow-sm">
+          <motion.div
+            className="flex flex-col gap-6 text-center lg:text-left z-10"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border w-fit mx-auto lg:mx-0 shadow-sm">
               <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
               <span className="text-sm font-medium text-foreground/80">Smart cooking made easy</span>
-            </div>
+            </motion.div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-tight">
+            <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-tight">
               Master your <br className="hidden lg:block" />
               kitchen with <br className="hidden lg:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                 ChefMind
               </span>
-            </h1>
+            </motion.h1>
 
-            <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
               Discover millions of premium recipes, organize your weekly meals, and cook like a professional with our intelligent culinary assistant.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mt-4">
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mt-4">
               <Link href="/recipes" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full group">
                   Explore Recipes
@@ -44,10 +71,10 @@ export function Hero() {
                   Saved Recipes
                 </Button>
               </Link>
-            </div>
+            </motion.div>
 
             {/* Social Proof */}
-            <div className="flex items-center gap-4 justify-center lg:justify-start mt-8 pt-8 border-t border-border/50">
+            <motion.div variants={itemVariants} className="flex items-center gap-4 justify-center lg:justify-start mt-8 pt-8 border-t border-border/50">
               <div className="flex -space-x-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-surface overflow-hidden">
@@ -59,11 +86,16 @@ export function Hero() {
                 <span className="font-bold text-foreground">10,000+</span> home chefs <br />
                 joined this week
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Illustration */}
-          <div className="relative z-10 w-full h-[400px] md:h-[500px] lg:h-[600px] animate-fade-in-up">
+          <motion.div
+            className="relative z-10 w-full h-[400px] md:h-[500px] lg:h-[600px]"
+            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.4 }}
+          >
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-3xl blur-2xl -z-10 transform scale-95"></div>
             <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-white/20">
               <img
@@ -74,22 +106,30 @@ export function Hero() {
             </div>
 
             {/* Floating Elements */}
-            <div className="absolute -top-6 -right-6 bg-white dark:bg-surface p-4 rounded-2xl shadow-xl border border-border glass animate-bounce-slow hidden md:flex items-center gap-3">
+            <motion.div
+              className="absolute -top-6 -right-6 bg-white dark:bg-surface p-4 rounded-2xl shadow-xl border border-border glass hidden md:flex items-center gap-3"
+              animate={{ y: [0, 15, 0] }}
+              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+            >
               <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-xl">🥑</div>
               <div>
                 <p className="text-xs text-foreground/60 font-medium">New Recipe</p>
                 <p className="text-sm font-bold">Avocado Toast</p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="absolute -bottom-6 -left-6 bg-white dark:bg-surface p-4 rounded-2xl shadow-xl border border-border glass animate-pulse-slow hidden md:flex items-center gap-3">
+            <motion.div
+              className="absolute -bottom-6 -left-6 bg-white dark:bg-surface p-4 rounded-2xl shadow-xl border border-border glass hidden md:flex items-center gap-3"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }}
+            >
               <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-xl">🔥</div>
               <div>
                 <p className="text-xs text-foreground/60 font-medium">Trending</p>
                 <p className="text-sm font-bold">Spicy Noodles</p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </Container>
     </section>
