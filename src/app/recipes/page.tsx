@@ -9,6 +9,7 @@ import { Recipe, RecipeFilters, Pagination } from "@/types";
 import { Button } from "@/components/common/Button";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 // Wrapping the main content in a component that uses SearchParams
 function RecipesContent() {
@@ -28,7 +29,7 @@ function RecipesContent() {
   const [cuisine, setCuisine] = useState(searchParams.get("cuisine") || "");
   const [difficulty, setDifficulty] = useState(searchParams.get("difficulty") || "");
   const [sort, setSort] = useState(searchParams.get("sort") || "-createdAt");
-  
+
   const page = parseInt(searchParams.get("page") || "1");
   const limit = 12;
 
@@ -80,7 +81,7 @@ function RecipesContent() {
     if (difficulty) params.set("difficulty", difficulty);
     if (sort) params.set("sort", sort);
     params.set("page", "1"); // reset to page 1 on filter change
-    
+
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -96,7 +97,7 @@ function RecipesContent() {
   const handlePageChange = (newPage: number) => {
     if (!pagination) return;
     if (newPage < 1 || newPage > pagination.totalPages) return;
-    
+
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", newPage.toString());
     router.push(`${pathname}?${params.toString()}`);
@@ -108,12 +109,12 @@ function RecipesContent() {
 
   return (
     <Container>
-      <SectionTitle 
-        title="All Recipes" 
+      <SectionTitle
+        title="All Recipes"
         subtitle="Browse our entire collection of delicious and healthy recipes."
         className="mb-8"
       />
-      
+
       {/* Filters Section */}
       <div className="bg-surface border border-border rounded-2xl p-6 mb-10 shadow-sm">
         <div className="flex flex-col lg:flex-row gap-4 mb-4">
@@ -130,7 +131,7 @@ function RecipesContent() {
               placeholder="Search recipes by title, ingredients..."
             />
           </div>
-          
+
           <div className="flex gap-4 flex-col sm:flex-row">
             <select
               value={category}
@@ -172,7 +173,7 @@ function RecipesContent() {
             </select>
           </div>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-border">
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-sm text-foreground/60">Sort by:</span>
@@ -194,7 +195,7 @@ function RecipesContent() {
               <option value="time">Fastest to Cook</option>
             </select>
           </div>
-          
+
           <div className="flex gap-3 w-full sm:w-auto">
             <Button variant="ghost" onClick={clearFilters} className="flex-1 sm:flex-none">
               Clear
@@ -229,11 +230,11 @@ function RecipesContent() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {isLoading
               ? loadingCards.map((index) => (
-                  <FeaturedRecipeCard key={index} isLoading={true} />
-                ))
+                <FeaturedRecipeCard key={index} isLoading={true} />
+              ))
               : recipes.map((recipe) => (
-                  <FeaturedRecipeCard key={recipe._id} isLoading={false} recipe={recipe} />
-                ))}
+                <FeaturedRecipeCard key={recipe._id} isLoading={false} recipe={recipe} />
+              ))}
           </div>
 
           {/* Pagination */}
@@ -247,14 +248,14 @@ function RecipesContent() {
               >
                 <ChevronLeft className="w-5 h-5" />
               </Button>
-              
+
               <div className="flex gap-1">
                 {Array.from({ length: pagination.totalPages }).map((_, i) => {
                   const pageNum = i + 1;
                   // Simple pagination: show current, first, last, and surrounding pages
                   if (
-                    pageNum === 1 || 
-                    pageNum === pagination.totalPages || 
+                    pageNum === 1 ||
+                    pageNum === pagination.totalPages ||
                     (pageNum >= pagination.page - 1 && pageNum <= pagination.page + 1)
                   ) {
                     return (
@@ -268,7 +269,7 @@ function RecipesContent() {
                       </Button>
                     );
                   } else if (
-                    pageNum === pagination.page - 2 || 
+                    pageNum === pagination.page - 2 ||
                     pageNum === pagination.page + 2
                   ) {
                     return <span key={pageNum} className="flex items-center px-2 text-foreground/50">...</span>;
@@ -296,20 +297,22 @@ function RecipesContent() {
 export default function RecipesPage() {
   return (
     <>
-      <main className="flex-grow pt-32 pb-20">
-        <Suspense fallback={
-          <Container>
-            <SectionTitle title="All Recipes" subtitle="Loading recipes..." className="mb-8" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <FeaturedRecipeCard key={i} isLoading={true} />
-              ))}
-            </div>
-          </Container>
-        }>
-          <RecipesContent />
-        </Suspense>
-      </main>
+      <ProtectedRoute>
+        <main className="flex-grow pt-32 pb-20">
+          <Suspense fallback={
+            <Container>
+              <SectionTitle title="All Recipes" subtitle="Loading recipes..." className="mb-8" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <FeaturedRecipeCard key={i} isLoading={true} />
+                ))}
+              </div>
+            </Container>
+          }>
+            <RecipesContent />
+          </Suspense>
+        </main>
+      </ProtectedRoute>
     </>
   );
 }
