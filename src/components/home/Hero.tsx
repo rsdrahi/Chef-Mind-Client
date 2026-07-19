@@ -21,7 +21,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 300, damping: 24 }
+    transition: { type: "spring" as const, stiffness: 300, damping: 24 }
   },
 };
 
@@ -94,7 +94,7 @@ export function Hero() {
             className="relative z-10 w-full h-[400px] md:h-[500px] lg:h-[600px]"
             initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.4 }}
+            transition={{ type: "spring" as const, stiffness: 100, damping: 20, delay: 0.4 }}
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-3xl blur-2xl -z-10 transform scale-95"></div>
             <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-white/20">

@@ -5,6 +5,8 @@ import "./globals.css";
 import { ToastProvider } from "@/providers/ToastProvider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
+import { Navbar } from "@/components/common/Navbar";
+import { Footer } from "@/components/common/Footer";
 
 const outfit = Outfit({
   variable: "--font-sans",
@@ -30,7 +32,11 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
         <ThemeProvider defaultTheme="system">
           <SmoothScrollProvider>
-            {children}
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
             <ToastProvider />
           </SmoothScrollProvider>
         </ThemeProvider>

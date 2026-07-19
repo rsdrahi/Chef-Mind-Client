@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback, Suspense } from "react";
-import { Navbar } from "@/components/common/Navbar";
-import { Footer } from "@/components/common/Footer";
 import { Container } from "@/components/common/Container";
 import { SectionTitle } from "@/components/common/SectionTitle";
 import { FeaturedRecipeCard } from "@/components/home/FeaturedRecipeCard";
@@ -298,7 +296,6 @@ function RecipesContent() {
 export default function RecipesPage() {
   return (
     <>
-      <Navbar />
       <main className="flex-grow pt-32 pb-20">
         <Suspense fallback={
           <Container>
@@ -313,7 +310,6 @@ export default function RecipesPage() {
           <RecipesContent />
         </Suspense>
       </main>
-      <Footer />
     </>
   );
 }

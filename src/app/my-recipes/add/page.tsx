@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Navbar } from "@/components/common/Navbar";
-import { Footer } from "@/components/common/Footer";
 import { Container } from "@/components/common/Container";
 import { SectionTitle } from "@/components/common/SectionTitle";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
@@ -107,7 +105,6 @@ export default function AddRecipePage() {
 
   return (
     <>
-      <Navbar />
       <main className="flex-grow pt-32 pb-20 bg-background min-h-screen">
         <Container>
           <div className="flex flex-col md:flex-row gap-8">
@@ -367,7 +364,6 @@ export default function AddRecipePage() {
           </div>
         </Container>
       </main>
-      <Footer />
     </>
   );
 }

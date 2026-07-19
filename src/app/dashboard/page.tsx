@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { Navbar } from "@/components/common/Navbar";
-import { Footer } from "@/components/common/Footer";
 import { Container } from "@/components/common/Container";
 import { SectionTitle } from "@/components/common/SectionTitle";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
@@ -26,7 +24,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Navbar />
 
       <main className="flex-grow pt-32 pb-20 bg-background min-h-screen">
         <Container>
@@ -118,8 +115,6 @@ export default function DashboardPage() {
           </div>
         </Container>
       </main>
-
-      <Footer />
     </>
   );
 }
