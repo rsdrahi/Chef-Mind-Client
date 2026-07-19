@@ -155,7 +155,7 @@ export default function EditRecipePage() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="flex-grow pt-32 pb-20 bg-background min-h-screen">
         <Container>
           <div className="flex flex-col md:flex-row gap-8">
@@ -412,7 +412,7 @@ export default function EditRecipePage() {
           </div>
         </Container>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
