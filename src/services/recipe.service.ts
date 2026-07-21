@@ -164,3 +164,32 @@ export const recipeService = {
     }
   }
 };
+
+export const generateRecipeSummary = async (data: {
+  title: string;
+  description: string;
+  ingredients: string[];
+}) => {
+  const response = await fetch(
+    `${API_URL}/ai/recipe-summary`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    console.error("AI Backend Error:", result);
+
+    throw new Error(
+      result.message || "Failed to generate AI recipe summary"
+    );
+  }
+
+  return result;
+};

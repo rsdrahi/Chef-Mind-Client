@@ -229,7 +229,11 @@ export default function RecipeDetailsPage() {
                 <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
                   {recipe.description}
                 </p>
-                <AISummaryCard />
+                <AISummaryCard
+                  title={recipe.title}
+                  description={recipe.description}
+                  ingredients={recipe.ingredients || []}
+                />
               </section>
 
               {/* Instructions */}
